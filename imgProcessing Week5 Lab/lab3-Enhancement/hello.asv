@@ -1,0 +1,25 @@
+image = imread('mri_txt.tif'); 
+% whos('image')
+
+imageAdjust = imadjust(image,stretchlim(image),[]);
+imshow(imageAdjust);
+
+% สร้างหน้าต่าง subplot มี 1 แถว 2 คอลัมน์
+subplot(1, 2, 1);  % ตำแหน่งที่ 1 (ซ้าย)
+imshow(image);
+title('Original Image');
+
+subplot(1, 2, 2);  % ตำแหน่งที่ 2 (ขวา)
+imshow(imageAdjust);
+title('Adjusted Image');
+
+image2 = imread('monet_gray_xlc.jpg'); 
+imageAdjust2 = histeq(image2);
+subplot(1, 2, 1);  % ตำแหน่งที่ 1 (ซ้าย)
+imshow(image2);
+title('Original Image');
+
+subplot(1, 2, 2);  % ตำแหน่งที่ 2 (ขวา)
+imshow(imageAdjust2);
+title('Adjusted Image');
+
