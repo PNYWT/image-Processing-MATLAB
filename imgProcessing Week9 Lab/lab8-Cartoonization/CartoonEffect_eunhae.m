@@ -1,18 +1,17 @@
-image = imread('eun_hae.png');
+img = imread("eun_hae.png");
 
-threshRGB = multithresh(image, 9);
+threshRGB = multithresh(img, 20);
 value = [0 threshRGB(2:end) 255];
-quantRGB = imquantize(image, threshRGB, value);
+quantRGB = imquantize(img, threshRGB, value);
 
-gaussianKernel = fspecial('gaussian', [3 3]);
-smoothedImage = imfilter(quantRGB, gaussianKernel);
+h = fspecial('gaussian', [10 10]);
+img_original = imfilter(quantRGB, h);
 
-edgeHorizontal = imfilter(smoothedImage, fspecial('sobel'));
-edgeVertical = imfilter(smoothedImage, fspecial('sobel')');
-edgeMagnitude = 5 * (edgeVertical + edgeHorizontal);
-cartoon = smoothedImage - edgeMagnitude;
+t = transpose(fspecial('sobel'));
+img_edge = imfilter(img, t);
+img_original = img_original - img_edge*2;
 
-figure, imshow(image), title('Original Image');
-figure, imshow(smoothedImage, []), title('Smoothed Image after Quantization with Gaussian Filter');
-figure, imshow(edgeMagnitude, []), title('Edge Detection with Sobel Filter');
-figure, imshow(cartoon, []), title('cartoon');
+t_non = fspecial('sobel');
+img_edge = imfilter(img,t_non);
+img_original = img_original - img_edge*2;
+imshow(img_original);

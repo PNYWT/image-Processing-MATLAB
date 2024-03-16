@@ -1,20 +1,17 @@
-image = imread('honeypot.jpg');
+img = imread("honeypot.jpg");
 
-threshRGB = multithresh(image, 5);
+threshRGB = multithresh(img, 20);
 value = [0 threshRGB(2:end) 255];
-quantRGB = imquantize(image, threshRGB, value);
+quantRGB = imquantize(img, threshRGB, value);
 
-kernelSize = 5; % กำหนดขนาดของ kernel
-avgKernel = ones(kernelSize) / kernelSize^2;
+h = fspecial('average', [50 50]);
+img_original = imfilter(quantRGB, h);
 
-smoothedImage = imfilter(quantRGB, avgKernel, 'replicate');
+t = transpose(fspecial('sobel'));
+img_edge = imfilter(img, t);
+img_original = img_original - img_edge*2;
 
-edgeHorizontal = imfilter(smoothedImage, fspecial('sobel'));
-edgeVertical = imfilter(smoothedImage, fspecial('sobel')');
-edgeMagnitude = 5 * (edgeVertical + edgeHorizontal);
-cartoon = smoothedImage - edgeMagnitude;
-
-figure, imshow(image), title('Original Image');
-figure, imshow(smoothedImage, []), title('Smoothed Image after Quantization with Gaussian Filter');
-figure, imshow(edgeMagnitude, []), title('Edge Detection with Sobel Filter');
-figure, imshow(cartoon, []), title('cartoon');
+t_non = fspecial('sobel');
+img_edge = imfilter(img,t_non);
+img_original = img_original - img_edge*2;
+imshow(img_original);
